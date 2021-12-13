@@ -1,4 +1,9 @@
-//finding way out of maze
+/*
+    finding way out of maze.
+    Please give 0 for entry and exit so the program can enter the maze
+    (0,0) is the entry coordinate and (x-1,y-1) is the exit where x and y
+    are the x and y coordinates of maze.
+*/
 
 #include<iostream>
 using namespace std;
