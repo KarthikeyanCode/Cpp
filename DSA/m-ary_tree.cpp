@@ -3,9 +3,6 @@
 #include<stdlib.h>
 #include<math.h>
 #include<bits/stdc++.h>
-
-using namespace std;
-
 #include<iostream>
 #include<vector>
 
@@ -86,6 +83,18 @@ int Count_Nodes(node* Node)
     return sum;
 }
 
+void traversal(node* Node)
+{
+    if(Node->branch.size() != 0)
+    {
+        for(int i=0;i<Node->branch.size();i++)
+        {
+            traversal(Node->branch[i]);
+            cout << Node->branch[i]->data << " ";
+        }
+    }
+}
+
 int main(void)
 {
     int option1, option2;
@@ -114,6 +123,7 @@ int main(void)
             }
             case 2: //Deletion
             {
+                
                 break;
             }
             case 3: //height/Depth
@@ -128,13 +138,14 @@ int main(void)
             }
             case 5: //traversal
             {
+                traversal(root);
                 break;
             }
             case 6:
             {
                 cout << "Thankyou" << "\n";
                 goto exit;
-                break;
+                break; 
             }
             default:
             {
