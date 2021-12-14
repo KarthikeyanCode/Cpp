@@ -1,3 +1,4 @@
+//deletion needs to be done 
 #include<iostream>
 #include<stdio.h>
 #include<stdlib.h>
@@ -25,8 +26,19 @@ class node
 void insertion(node* prev_Node, node* Node)//insertion
 {
     int flag=0;
+
+    if(root == NULL)
+    {
+        root = Node;
+        return;
+    }
     if(prev_Node->branch.size()<m)
     {
+        if(prev_Node->branch.size() == 0)
+        {
+            prev_Node->branch.push_back(Node);
+            return;
+        }
         for(int i=0;i<prev_Node->branch.size();i++)
         {
             if(Node->data < prev_Node->branch[i]->data)
@@ -83,8 +95,22 @@ int Count_Nodes(node* Node)
     return sum;
 }
 
+/*
+
+                 5
+
+            1    4    6
+            
+        0   2  3
+*/
+
 void traversal(node* Node)
 {
+    if(Node == root)
+    {
+        cout << root->data << " ";
+    }
+    //cout << "Branch size of root " << "\n";
     if(Node->branch.size() != 0)
     {
         for(int i=0;i<Node->branch.size();i++)
@@ -118,12 +144,14 @@ int main(void)
                 cout << "Enter the data" << "\n";
                 cin >> data;
                 node* Node = (node*)malloc(sizeof(node));
+                Node->data = data;
+                Node->branch.clear();
                 insertion(root, Node);
                 break;
             }
             case 2: //Deletion
             {
-                
+
                 break;
             }
             case 3: //height/Depth
@@ -138,7 +166,10 @@ int main(void)
             }
             case 5: //traversal
             {
+                cout << "\n";
+                cout << "m-ary tree: " << "\n";
                 traversal(root);
+                cout << "\n\n";
                 break;
             }
             case 6:

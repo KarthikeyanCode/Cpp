@@ -68,7 +68,8 @@ void insertion(node* Node, node* prevNode)
             prevNode->right = Node;
         }
     }
-    
+    Node->left = NULL;
+    Node->right = NULL;
 }
 
 int height(node* Node)
