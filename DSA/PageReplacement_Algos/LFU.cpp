@@ -20,8 +20,7 @@ class page
 int main(void)
 {
     int dum,size=0;
-    //index - index of page frame to remove from, min_index - LRU values index in page reference string 
-    int option, index, min_index;
+    int option, min_freq, index;
     bool cache;
     while(1)
     {
@@ -51,10 +50,10 @@ int main(void)
                 }
                 cout << "Enter the size of page frame" << "\n"; //page frame 
                 cin >> size;
-                int LRU[size];
+                int LFU[size];
                 for(int i=0;i<size;i++)
                 {
-                    LRU[i] = 0;
+                    LFU[i] = 0;
                 }
                 for(int i=0;i<p1.page_ref.size();i++)
                 {
@@ -76,23 +75,24 @@ int main(void)
                         }
                         else
                         {
+                            //remove the least frequently used page from the page frame
                             for(int k=0;k<i;k++)
                             {
                                 for(int p=0;p<p1.page_frame.size();p++)
                                 {
                                     if(p1.page_ref[k] == p1.page_frame[p])
                                     {
-                                        LRU[p] = k;
+                                        LFU[p]++;
                                     }
                                 }
                             }
-                            min_index = LRU[0];
-                            index = 0;
+                            min_freq = LFU[0];
+                            index=0;
                             for(int p=0;p<size;p++)
                             {
-                                if(LRU[p] < min_index)
+                                if(LFU[p] < min_freq)
                                 {
-                                    min_index = LRU[p];
+                                    min_freq = LFU[p];
                                     index = p;
                                 }
                             }
