@@ -16,7 +16,7 @@ class node
         node* right;
 
 }*root=NULL;
-
+           
 void insertion(node* Node, node* prev_Node)
 {
     //insertion
