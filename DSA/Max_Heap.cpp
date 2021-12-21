@@ -19,35 +19,45 @@ class node
 
 void insertion(node* Node, node* prev_Node)
 {
-    if(prev_Node->left == NULL)
+    //insertion
+    int temp;
+    if(root == NULL)
     {
-        prev_Node->left = Node;
-        Node->left = NULL;
-        Node->right = NULL;
-        return;
-    }
-    else if(Node->data < prev_Node->left->data)
-    {
-        insertion(Node, prev_Node->left);
-    }
-    else if(prev_Node->right == NULL)
-    {
-        prev_Node->right = Node;
-        Node->left = NULL;
-        Node->right = NULL;
-        return;
-    }
-    else if(Node->data > prev_Node->right->data)//replacement 
-    {
-        Node->right = prev_Node->right;
-        Node->left = NULL;
-        prev_Node->right = Node;
-        return;
+        root = Node;
     }
     else
     {
-        insertion(Node, prev_Node->right);
+        if(Node->data < prev_Node->data)
+        {
+            if(prev_Node->left == NULL)
+            {
+                prev_Node->left = Node;
+            }
+            else
+            {
+                insertion(Node, prev_Node->left); 
+            }
+        }
+        else
+        {
+            if(prev_Node->right == NULL)
+            {
+                prev_Node->right = Node; //prev Node 3
+                temp = prev_Node->data;
+                prev_Node->data = Node->data;
+                Node->data = temp;
+            }
+            else
+            {
+                insertion(Node, prev_Node->right);//prev Node 6,4
+                temp = prev_Node->data;
+                prev_Node->data = prev_Node->right->data;
+                prev_Node->right->data = temp;
+            }
+        }
     }
+    Node->left = NULL;
+    Node->right = NULL;
 }
 
 void Delete(int data, node* Node, node* prev_Node)
@@ -150,13 +160,6 @@ int main(void)
                 node* Node = (node*)malloc(sizeof(node));
                 cout << "Enter the data of the node" << "\n";
                 cin >> Node->data;
-                if(Node->data > root->data)
-                {
-                    Node->right = root;
-                    Node->left = NULL;
-                    root = Node;
-                    continue;
-                }
                 insertion(Node, root);
                 break;
             }
