@@ -28,9 +28,9 @@ void insertion(int num)
     }
     else
     {
-        if(hash_[abs(num)][0] != 1)
+        if(hash_[abs(num)][1] != 1)
         {
-            hash_[abs(num)][0] = 1;
+            hash_[abs(num)][1] = 1;
         }
         else
         {
@@ -75,9 +75,9 @@ bool Delete(int num)
 void Display()
 {
     cout << "The hash: " << "\n";
-    for(int i=0;i<2;i++)
+    for(int i=1;i>=0;i--)
     {
-        if(i=1) //negative numbers
+        if(i==1) //negative numbers
         {
             for(int j=max;j>0;j--)
             {
