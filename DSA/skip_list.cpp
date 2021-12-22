@@ -130,16 +130,69 @@ void Display()
     cout << n->data << "\n";
  }
 
+void Delete(int data)
+{
+    if(head == NULL)
+    {
+        cout << "The linked list is empty" << "\n";
+        return;
+    }
+    //deleting it from normal lane     
+    node* n = head;
+    node* prev;
+    while(n->next != NULL)
+    {
+        if(n->data == data)
+        {
+            if(n == head)
+            {
+                head = n->next;
+                free(n);
+                return;
+            }
+            prev->next = n->next;
+            free(n);
+        }
+        prev = n;
+        n = n->next;
+    }
+    if(n->data == data)
+    {
+        if(n == head)
+        {
+            head = NULL;
+            return;
+        }
+        prev->next = NULL;
+    }
+    n = head;
+    //deleting it from express lane
+    while(n->express != NULL)
+    {
+        if(n->data == data)
+        {
+            prev->express = n->express;
+        }
+        prev = n;
+        n = n->express;
+    }
+    if(n->data == data)
+    {
+        prev->express = NULL;
+    }
+}
+
 int main(void)
 {
-    int opt,opt1;
+    int opt,opt1,data;
     while(1)
     {
         cout << "Choose: " << "\n";
         cout << "1. insert" << "\n";
         cout << "2. Search" << "\n";
         cout << "3. Display" << "\n";
-        cout << "4. Exit" << "\n";
+        cout << "4. Delete" << '\n';
+        cout << "5. Exit" << "\n";
         cin >> opt;
         switch (opt)
         {
@@ -172,6 +225,13 @@ int main(void)
                 break;  
             }
             case 4:
+            {
+                cout << "Enter data of the node to remove" << "\n";
+                cin >> data;
+                Delete(data);
+                break;
+            }
+            case 5:
             {
                 goto exit;
                 break;
