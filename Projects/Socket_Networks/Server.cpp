@@ -1,4 +1,4 @@
-//server side code for socket - Cpp program
+//server side code for socket
 
 #include<stdio.h>
 #include<unistd.h>
@@ -13,12 +13,16 @@
 int main(void)
 {
 	FILE* img;
+	FILE* file;
 	time_t current_time;
 	int server, inc_socket, no_of_bytes, addrlen, status;
 	int opt=1;
 	int size, read_size;
-	char buff[5000];
+	char file_buff[500];
+	char file_opt[20];
+	char buff[500];
 	char image_buff[10240];
+	char error[100];
 	char msg[] = "Hello, connection has been established with Server";
 	char ping[] = "Connection Alive\n";
 	char time_[25];
@@ -94,10 +98,54 @@ int main(void)
 			
 				bzero(image_buff, sizeof(image_buff));//clearing the buffer 
 			}
+			
 			printf("Image Sent\n");
 		}
-		//send(inc_socket, msg, strlen(msg), 0);
-		//printf("Message Sent \n");
+		else if(strcmp(buff, "file") == 0)
+		{
+			printf("Requested Document\n");
+			printf("Fetching the document\n");
+			file = fopen("document.txt", "w+");
+			read_size = fread(file_buff, 1, sizeof(file_buff), file);
+			printf("document fetched\n");
+			do
+			{
+				status = write(inc_socket, file_buff, read_size);
+
+			}while(status<0);	
+			printf("Document information transfered\n");
+			bzero(file_buff, sizeof(file_buff));
+			do
+			{
+				no_of_bytes = read(inc_socket, file_opt, sizeof(file_opt));
+
+			}while(no_of_bytes<0);
+			if(strcmp(file_opt, "upload") == 0)
+			{
+				printf("Upload initiating\n");
+				do
+				{
+					no_of_bytes = read(inc_socket, file_buff, sizeof(file_buff));
+				}while(no_of_bytes<0);
+				printf("Uploading..\n");		
+				fseek(file, 0, SEEK_SET);
+				fwrite(file_buff, 1, no_of_bytes, file);
+				strcmp(buff, "done");
+				send(inc_socket, buff, strlen(buff)+1, 0);
+				printf("Done\n");
+			}
+			else if(strcmp(file_opt, "exit") == 0)
+			{
+				printf("Exiting the file application\n");
+			}
+			
+		}
+		else
+		{
+			strcmp(error, "The requested Query Could not be found");
+			send(inc_socket, error, strlen(error)+1, 0);
+		}
+		bzero(error, sizeof(error));
        	}
 	printf("Closing the server\n");	
 	return 0;
