@@ -105,40 +105,38 @@ int main(void)
 		{
 			printf("Requested Document\n");
 			printf("Fetching the document\n");
-			file = fopen("document.txt", "w+");
-			read_size = fread(file_buff, 1, sizeof(file_buff), file);
+			file = fopen("document.txt", "r+");
+			read_size = fread(file_buff, 1, sizeof(file_buff)-1, file);
 			printf("document fetched\n");
-			do
-			{
-				status = write(inc_socket, file_buff, read_size);
-
-			}while(status<0);	
+			
+			write(inc_socket, file_buff, read_size);
+	
 			printf("Document information transfered\n");
 			bzero(file_buff, sizeof(file_buff));
+			fclose(file);
+		}
+		else if(strcmp(buff, "upload") == 0)
+		{
+			file = fopen("document.txt", "w+");
+			printf("Upload initiating\n");
+			bzero(buff, sizeof(buff));
+			strcpy(buff, "Message Received");
+			send(inc_socket, buff, strlen(buff)+1, 0);
+			bzero(buff, sizeof(buff));
 			do
 			{
-				no_of_bytes = read(inc_socket, file_opt, sizeof(file_opt));
-
+				no_of_bytes = read(inc_socket, file_buff, sizeof(file_buff));
 			}while(no_of_bytes<0);
-			if(strcmp(file_opt, "upload") == 0)
-			{
-				printf("Upload initiating\n");
-				do
-				{
-					no_of_bytes = read(inc_socket, file_buff, sizeof(file_buff));
-				}while(no_of_bytes<0);
-				printf("Uploading..\n");		
-				fseek(file, 0, SEEK_SET);
-				fwrite(file_buff, 1, no_of_bytes, file);
-				strcmp(buff, "done");
-				send(inc_socket, buff, strlen(buff)+1, 0);
-				printf("Done\n");
-			}
-			else if(strcmp(file_opt, "exit") == 0)
-			{
-				printf("Exiting the file application\n");
-			}
-			
+			printf("Uploading..\n");		
+			//fseek(file, 0, SEEK_SET);
+			fwrite(file_buff, 1, no_of_bytes, file);
+			strcpy(buff, "done");
+			send(inc_socket, buff, strlen(buff)+1, 0);
+			printf("Done\n");
+		}
+		else if(strcmp(buff, "exit") == 0)
+		{
+			printf("Exiting the file application\n");
 		}
 		else
 		{
@@ -146,7 +144,8 @@ int main(void)
 			send(inc_socket, error, strlen(error)+1, 0);
 		}
 		bzero(error, sizeof(error));
-       	}
+		bzero(buff, sizeof(buff));
+       }
 	printf("Closing the server\n");	
 	return 0;
 }

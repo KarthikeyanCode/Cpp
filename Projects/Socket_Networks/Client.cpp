@@ -18,7 +18,7 @@ int main(void)
 	int soc, bytes, opt, status, size, read_size, write_size;
 	char image_buff[10241];
 	char file_buff[500];
-	char file_opt[500];
+	char file_opt[20];
 	struct sockaddr_in addr;
 	char msg[100];
 	char query[100];
@@ -109,18 +109,19 @@ int main(void)
 			}
 			case 4:
 			{
-				file = fopen("read_doc.txt", "r+");
+				file = fopen("read_doc.txt", "w+");
+				fseek(file, 0, SEEK_SET);
 				strcpy(query, "file");
 				send(soc, query, strlen(query)+1, 0);
 				printf("Fetching the data\n");
-				do
+				do 
 				{
-					bytes = read(soc, file_buff, sizeof(file_buff));
-
+				bytes = read(soc, file_buff,sizeof(file_buff));
 				}while(bytes<0);
 				//writing to the file 
 				printf("Writing to the file\n");
-				fwrite(file_buff, 1, bytes, file);	
+				fwrite(file_buff, 1, bytes, file);
+				fclose(file);	
 				system("gedit read_doc.txt &");
 				bzero(file_buff, sizeof(file_buff));
 				file_edit:
@@ -131,9 +132,13 @@ int main(void)
 				scanf("%d", &opt);
 				if(opt == 1)
 				{
-					strcmp(file_opt, "upload");
-					send(soc, file_opt, strlen(file_opt)+1, 0);
-					fread(file_buff, 1, sizeof(file_buff), file);
+					strcpy(file_opt, "upload");
+					send(soc, file_opt, strlen(file_opt)+1, 0);	
+					read(soc, buffer, 1024);
+					printf("From server: %s \n", buffer);
+					bzero(buffer, sizeof(buffer));
+					file = fopen("read_doc.txt", "r+");
+					fread(file_buff, 1, sizeof(file_buff)-1, file);
 					send(soc, file_buff, strlen(file_buff)+1, 0);
 					do
 					{
@@ -153,6 +158,7 @@ int main(void)
 				{
 					strcmp(file_opt, "exit");
 					printf("Exiting file application\n");
+					send(soc, file_opt, strlen(file_opt)+1, 0);
 				}
 				else
 				{
