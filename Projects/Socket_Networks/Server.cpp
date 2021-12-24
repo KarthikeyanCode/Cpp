@@ -133,6 +133,7 @@ int main(void)
 			strcpy(buff, "done");
 			send(inc_socket, buff, strlen(buff)+1, 0);
 			printf("Done\n");
+			fclose(file);
 		}
 		else if(strcmp(buff, "exit") == 0)
 		{
